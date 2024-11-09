@@ -8,15 +8,10 @@ import smtplib
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
-# print(voices[1].id)
 engine.setProperty('voice', voices[0].id)
-
-
 def speak(audio):
     engine.say(audio)
     engine.runAndWait()
-
-
 def wishMe():
     hour = int(datetime.datetime.now().hour)
     if hour>=0 and hour<12:
@@ -74,13 +69,13 @@ if _name_ == "_main_":
             speak(results)
 
         elif 'open youtube' in query:
-            webbrowser.open("youtube.com")
+            webbrowser.open("https://www.youtube.com")
 
         elif 'open google' in query:
-            webbrowser.open("google.com")
+            webbrowser.open("https://www.google.com")
 
-        elif 'open stackoverflow' in query:
-            webbrowser.open("stackoverflow.com")   
+        elif 'open javatpoint' in query:
+            webbrowser.open("https://www.javatpoint.com")   
 
 
         elif 'play music' in query:
@@ -97,7 +92,7 @@ if _name_ == "_main_":
             codePath = "B:\\Microsoft VS Code\\Code.exe"
             os.startfile(codePath)
 
-        elif 'email to harry' in query:
+        elif 'email to vandana' in query:
             try:
                 speak("What should I say?")
                 content = takeCommand()
@@ -106,4 +101,4 @@ if _name_ == "_main_":
                 speak("Email has been sent!")
             except Exception as e:
                 print(e)
-                speak("Sorry my friend harry bhai. I am not able to send this email")
+                speak("Sorry. I am not able to send this email")
