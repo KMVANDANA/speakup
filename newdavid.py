@@ -53,7 +53,7 @@ def sendEmail(to, content):
     server.sendmail('sokiasmith@gmail.com', to, content)
     server.close()
 
-if _name_ == "_main_":
+if __name__ == "_main_":
     wishMe()
     while True:
     # if 1:
@@ -78,11 +78,11 @@ if _name_ == "_main_":
             webbrowser.open("https://www.javatpoint.com")   
 
 
-        elif 'play music' in query:
-            music_dir = 'B:\PROJECT\SPEAKUP\music'
-            songs = os.listdir(music_dir)
-            print(songs)    
-            os.startfile(os.path.join(music_dir, songs[0]))
+        # elif 'play music' in query:
+        #     music_dir = 'B:\PROJECT\SPEAKUP\music'
+        #     songs = os.listdir(music)
+        #     print(songs)    
+        #     os.startfile(os.path.join(music, songs[0]))
 
         elif 'the time' in query:
             strTime = datetime.datetime.now().strftime("%H:%M:%S")    
