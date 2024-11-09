@@ -1,79 +1,109 @@
-import pyttsx3
+import pyttsx3 
+import speech_recognition as sr 
 import datetime
-import speech_recognition as sr
-import wikipedia
+import wikipedia 
 import webbrowser
 import os
-import pyaudio
+import smtplib
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
+# print(voices[1].id)
 engine.setProperty('voice', voices[0].id)
+
 
 def speak(audio):
     engine.say(audio)
     engine.runAndWait()
 
+
 def wishMe():
-    hour = datetime.datetime.now().hour
-    if 0 <= hour < 12:
-        speak("good morning")
-    elif 12 <= hour < 18:
-        speak("good afternoon")
+    hour = int(datetime.datetime.now().hour)
+    if hour>=0 and hour<12:
+        speak("Good Morning!")
+
+    elif hour>=12 and hour<18:
+        speak("Good Afternoon!")   
+
     else:
-        speak("good evening")
-    speak("I am David. How can I help you?")
-   
+        speak("Good Evening!")  
+
+    speak("I am david.how can I help you")       
 
 def takeCommand():
+    
+
     r = sr.Recognizer()
     with sr.Microphone() as source:
         print("Listening...")
         r.pause_threshold = 1
-        audio = r.listen(source, timeout=20)  # Increased timeout to 5 seconds
-        try:
-            print("Recognizing...")
-            query = r.recognize_google(audio, language='en-in')
-            print(f'user said: {query}')
-        except Exception as e:
-            print(e)
-            print("Say that again, please.")
-            return "None"
-        return query.lower()
+        audio = r.listen(source)
 
-if __name__ == "__main__":
+    try:
+        print("Recognizing...")    
+        query = r.recognize_google(audio, language='en-in')
+        print(f"User said: {query}\n")
+
+    except Exception as e:
+        # print(e)    
+        print("Say that again please...")  
+        return "None"
+    return query
+
+def sendEmail(to, content):
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.ehlo()
+    server.starttls()
+    server.login('vandana125.alg@gmail.com', '12345')
+    server.sendmail('sokiasmith@gmail.com', to, content)
+    server.close()
+
+if _name_ == "_main_":
     wishMe()
     while True:
-        query = takeCommand()
+    # if 1:
+        query = takeCommand().lower()
+
+        
         if 'wikipedia' in query:
-            speak('searching wikipedia...')
-            query = query.replace('wikipedia', '')
-            results = wikipedia.summary(query, sentences=5)
-            speak('according to wikipedia')
+            speak('Searching Wikipedia...')
+            query = query.replace("wikipedia", "")
+            results = wikipedia.summary(query, sentences=2)
+            speak("According to Wikipedia")
             print(results)
             speak(results)
+
         elif 'open youtube' in query:
-            webbrowser.open("https://www.youtube.com")
+            webbrowser.open("youtube.com")
+
         elif 'open google' in query:
-            webbrowser.open("https://www.google.com")
-        elif 'open gmail' in query:
-            webbrowser.open("https://mail.google.com")
-        elif 'open spotify' in query:
-            webbrowser.open("https://www.spotify.com")
-        elif 'david time please' in query:
-            strtime = datetime.datetime.now().strftime("%H:%M:%S")
-            speak(f"The time is {strtime}")
-        elif 'thank you' in query:
-            speak("You're most welcome")
+            webbrowser.open("google.com")
+
+        elif 'open stackoverflow' in query:
+            webbrowser.open("stackoverflow.com")   
+
+
+        elif 'play music' in query:
+            music_dir = 'B:\PROJECT\SPEAKUP\music'
+            songs = os.listdir(music_dir)
+            print(songs)    
+            os.startfile(os.path.join(music_dir, songs[0]))
+
+        elif 'the time' in query:
+            strTime = datetime.datetime.now().strftime("%H:%M:%S")    
+            speak(f"the time is {strTime}")
+
         elif 'open code' in query:
-            path = "B:\\Microsoft VS Code\\Code.exe"
-            os.startfile(path)
-        elif 'open mca notes' in query:
-            path = "B:\\mca"
-            os.startfile(path)
-        elif 'open wallpaper' in query:
-            path = "B:\\wallpaper"
-            os.startfile(path)
-        elif 'bye bye' in query:
-            speak("okay bye take care")
-            break
+            codePath = "B:\\Microsoft VS Code\\Code.exe"
+            os.startfile(codePath)
+
+        elif 'email to harry' in query:
+            try:
+                speak("What should I say?")
+                content = takeCommand()
+                to = "vandana125.alg@gmail.com.com"    
+                sendEmail(to, content)
+                speak("Email has been sent!")
+            except Exception as e:
+                print(e)
+                speak("Sorry my friend harry bhai. I am not able to send this email")
